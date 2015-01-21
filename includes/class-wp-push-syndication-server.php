@@ -17,6 +17,7 @@ class WP_Push_Syndication_Server {
 		// initialization
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		// custom columns
 		add_filter( 'manage_edit-syn_site_columns', array( $this, 'add_new_columns' ) );
@@ -207,6 +208,16 @@ class WP_Push_Syndication_Server {
 
 		// Maybe run upgrade
 		$this->upgrade();
+	}
+
+	public function admin_notices() {
+		if ( ! function_exists( 'mcrypt_decrypt' ) || ! function_exists( 'mcrypt_encrypt' ) ) {
+			?>
+			<div class="error">
+				<p><?php _e( '<strong>Syndication:</strong> Missing MCrypt extension', 'push-syndication' ); ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	public function load_scripts_and_styles( $hook ) {
